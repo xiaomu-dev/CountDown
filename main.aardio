@@ -7,9 +7,12 @@ mainForm.add()
 // 引入web
 import web.view;
 var wb = web.view(mainForm);
+wb.transparent = true; // 透明背景
 
-// 透明背景
-wb.transparent = true; 
+// 创建圆角无边框窗口
+import win.region.round;
+win.region.round(mainForm,,,20,20); // 设置圆角半径为20
+
 
 // 导出给网页调用的js方法, 需在wb.go之前
 wb.external = {
@@ -29,10 +32,10 @@ wb.external = {
 		win.setTopmost(mainForm.hwnd, flag); // 置顶窗口
 	};
 	win_active = function(flag) {
-		win.setForeground(mainForm.hwnd, flag); // 显示到前台
+		win.setForeground(mainForm.hwnd); // 显示到前台
 	};
 	win_restore = function(flag) {
-		win.show(mainForm.hwnd, 9/*_SW_RESTORE*/); // 自最大化或最小化恢复显示
+		win.show(mainForm.hwnd); // 自最大化或最小化恢复显示
 	};
 }
 
