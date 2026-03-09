@@ -19,6 +19,13 @@
 				<el-button @click="start" type="success" size="large">开始</el-button>
 				<el-button @click="stop" type="warning" size="large">重置</el-button>
 			</div>
+
+			<div v-if="isDown" class="IsDown">
+				<div class="Box">
+					<div class="Title">倒计时结束!</div>
+					<el-button @click="confirm" type="success">OK</el-button>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -28,6 +35,7 @@
 	import NumInput from './Coms/NumInput.vue';
 	import Clock from './Coms/Clock.vue';
 	const isRun = ref(false);
+	const isDown = ref(false);
 	const hour = ref(0);
 	const minute = ref(0);
 	const second = ref(0);
@@ -35,6 +43,7 @@
 	const timer = ref(null);
 	const stop = () => {
 		isRun.value = false;
+		isDown.value = false;
 		clearTimer();
 		hour.value = minute.value = second.value = total.value = 0;
 	};
@@ -49,11 +58,14 @@
 		total.value -= 1;
 		if (total.value <= 0) {
 			stop();
-			ElMessage({ message: '倒计时结束!', type: 'success' });
 			WinRef.value?.winTop(true);
-			setTimeout(() => WinRef.value?.winTop(false), 1000);
+			isDown.value = true;
 			return;
 		}
+	};
+	const confirm = () => {
+		isDown.value = false;
+		WinRef.value?.winTop(false);
 	};
 	const clearTimer = () => {
 		if (timer.value) {
@@ -117,6 +129,32 @@
 				margin: 20px 0;
 				.el-button {
 					width: 120px;
+				}
+			}
+
+			.IsDown {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				background: rgba(0, 0, 0, 0.5);
+				z-index: 100;
+				.Box {
+					text-align: center;
+					background: #fff;
+					border-radius: 10px;
+					padding: 10px;
+					.Title {
+						font-size: 24px;
+						font-weight: bold;
+						margin: 20px;
+						color: var(--el-color-success);
+					}
 				}
 			}
 		}
